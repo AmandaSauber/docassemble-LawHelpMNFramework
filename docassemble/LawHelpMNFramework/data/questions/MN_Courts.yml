@@ -1,0 +1,87 @@
+objects:
+  - the_courts: ALCourtLoader.using(filename="Courts.xlsx")
+---
+#################### Interview order #####################
+code: |
+  trial_court_district
+  display_court
+---
+code: |
+  if the_courts.county_has_one_court(the_county):
+    my_court = the_courts.county_court("my_court", the_county)
+  else:
+    court_index
+    my_court = the_courts.as_court("my_court", court_index)
+---
+code: |
+  def get_judicial_district(the_county):
+      if the_county in ["McLeod", "Sibley", "Carver", "Scott", "Dakota", "Le Sueur", "Goodhue"]:
+          return "First Judicial District"
+      elif the_county == "Ramsey":
+          return "Second Judicial District"
+      elif the_county in ["Rice", "Waseca", "Steele", "Dodge", "Olmsted", "Wabasha", "Winona", "Freeborn", "Mower", "Fillmore", "Houston"]:
+          return "Third Judicial District"
+      elif the_county == "Hennepin":
+          return "Fourth Judicial District"
+      elif the_county in ["Lincoln", "Lyon", "Redwood", "Brown", "Nicollet", "Pipestone", "Murray", "Cottonwood", "Watonwan", "Blue Earth", "Rock", "Nobles", "Jackson", "Martin", "Faribault"]:
+          return "Fifth Judicial District"
+      elif the_county in ["St. Louis", "Lake", "Cook", "Carlton"]:
+          return "Sixth Judicial District"
+      elif the_county in ["Clay", "Becker", "Otter Tail", "Wadena", "Douglas", "Todd", "Morrison", "Mille Lacs", "Stearns", "Benton"]:
+          return "Seventh Judicial District"
+      elif the_county in ["Wilkin", "Grant", "Traverse", "Big Stone", "Stevens", "Pope", "Swift", "Lac qui Parle", "Kandiyohi", "Chippewa", "Meeker", "Yellow Medicine", "Renville"]:
+          return "Eighth Judicial District"
+      elif the_county in ["Kittson", "Roseau", "Lake of the Woods", "Marshall", "Beltrami", "Koochiching", "Pennington", "Red Lake", "Polk", "Clearwater", "Norman", "Mahnomen", "Hubbard", "Cass", "Itasca", "Crow Wing", "Aitkin"]:
+          return "Ninth Judicial District"
+      elif the_county in ["Pine", "Kanabec", "Sherburne", "Isanti", "Chisago", "Anoka", "Wright", "Washington"]:
+          return "Tenth Judicial District"
+      else:
+          return "Unknown Judicial District"
+
+  trial_court_district = get_judicial_district(the_county)
+---
+id: district and county
+question: |
+  What county are you being sued in?
+fields:
+  - "no label": the_county
+    code: sorted(the_courts.county_list())
+    required: True
+    label above field: True
+    datatype: str
+  - note: |
+      You can find the name of the county in the top left-hand corner of the Complaint.
+---
+question: |
+  There is more than one court in your county. Pick the court below.
+fields:
+  - "no label": court_index
+    code: the_courts.matching_courts_in_county(the_county)
+---
+continue button field: display_court
+question: |
+  You selected "${ my_court }"
+subquestion: |
+  ${ my_court.address.block() }
+---
+id: MN_Courts review screen
+event: review_MN_Courts
+question: |
+  Review your answers
+review:
+  - raw html: |
+      ${ start_accordion('Filing Court') }  
+  - html: |
+      <div class="court-info">
+        <strong>Court Address:</strong>
+        <p>${ my_court.address.block().replace('[NEWLINE]', '<br>') }</p>
+      </div>
+  - label: Edit
+    fields:
+      - the_county
+      - follow up: 
+          - my_court
+    button: |
+      **County**:
+      ${ the_county }
+---
