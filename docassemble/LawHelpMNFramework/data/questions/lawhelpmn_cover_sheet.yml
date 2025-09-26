@@ -1,0 +1,80 @@
+# Used to set up and populate a dynamic ALDocument cover page, which can then be
+# included in a tool's ALDocumentBundle.
+# Note that any of the cover_sheet_X or similar strings can be overridden in a program's local yml.
+---
+code: |
+  resource_page_link = f"[{ resource_page_name }]({ resource_page_url_only })" 
+---
+code: |
+  resource_page_url_only = "https://www.lawhelpmn.org/"
+  resource_page_name = "YOU MUST SET resource_page_name & resource_page_url_only!"
+# These defaults must be overwritten in each interview.
+# Example:
+# ---
+# code: |
+#   resource_page_url_only = "https://www.lawhelpmn.org/node/2754"
+#   resource_page_name = "Conciliation Court"
+---
+
+# "else" covers when MLH_form_type is "forms" as well as providing a fallback
+code: |
+  if LawHelpMN_form_type == "form":
+    cover_sheet_header = "Your form is ready. Well done!"
+  elif LawHelpMN_form_type == "letter":
+    cover_sheet_header = "Your letter is ready. Well done!"
+  else:
+    cover_sheet_header = "Your forms are ready. Well done!"
+---
+code: |
+  cover_sheet_top_message = f"What to Do With Your { capitalize(LawHelpMN_form_type) }"
+---
+code: |
+  cover_sheet_complete_1 = f"Now that you have your { LawHelpMN_form_type }, use our instructions to learn about next steps."
+  if LawHelpMN_instructions_included == True:
+	  cover_sheet_complete_1 += f" Go to the next page in this document to see the instructions."
+  # TODO in future: more customization may be helpful for tools with multiple sets of instructions.
+---
+code: |
+  has_whats_next_text = False
+---
+code: |
+  whats_next_text_message = "||||||||THIS NEEDS TO BE CUSTOMIZED||||||||"
+---
+code: |
+  cover_sheet_complete_1a = f"For more information or online instructions, visit:"
+---
+#### NEED TO CREATE THE COVER LETTER TEMPLATE (word doc) #####
+attachment:
+  name: cover sheet 
+  variable name: cover_sheet_template[i]
+  skip undefined: False
+  docx template file: cover_sheet.docx
+  tagged pdf: True
+  fields:
+      - "cover_sheet_top_message": ${ cover_sheet_top_message }
+      - "cover_sheet_complete_1": ${ cover_sheet_complete_1 }
+      - "cover_sheet_complete_1a": ${ cover_sheet_complete_1a }
+      - "resource_page_link": ${ resource_page_link }
+      - "resource_page_url_only": ${ resource_page_url_only }
+---
+#  Creates object that can be referenced in a program's local ALDocumentBundle (see example 1 below) if 
+#  including cover sheet as separate document, rather than as template within instructions document.
+objects:
+  - cover_sheet_template: >-
+      ALDocument.using(title="Instructions", 
+      filename="Instructions - Do not file this", enabled=True, has_addendum=False)
+# The cover sheet can be included in a tool's ALDocumentBundle as either an individual file or along with instructions or other reference material. The below examples are from the child support motion tool and therefore list other child support docs and a child support filename.
+# 1. As individual file, include cover_sheet_template object in al_user_bundle in your interview. 
+#    ---
+#    objects:
+#      - al_user_bundle: ALDocumentBundle.using(elements=[cover_sheet_template, mrcs_attachment, 
+#        mrcs_foc10, mrcs_foc10d, mrcs_foc12], filename="Motion Regarding Child Support (All 
+#        Forms).pdf", title="All forms to download for your records", enabled=True)
+# 2. As part of a combined file ('instructions' is an ALDocument defined locally. The cover_sheet 
+#    template is inserted into the 'instructions' template. See coding doc for more info.):
+#    ---
+#    objects:
+#      - al_user_bundle: ALDocumentBundle.using(elements=[instructions, mrcs_attachment, mrcs_foc10, 
+#        mrcs_foc10d, mrcs_foc12], filename="Motion Regarding Child Support (All Forms).pdf", 
+#        title="All forms to download for your records", enabled=True)
+# Exclude the instructions or cover sheet from al_court_bundle
