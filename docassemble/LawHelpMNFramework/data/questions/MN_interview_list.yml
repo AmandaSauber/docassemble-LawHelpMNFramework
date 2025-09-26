@@ -1,0 +1,8 @@
+---
+include:
+  - docassemble.AssemblyLine:interview_list.yml
+  - lawhelpmn_interview_framework.yml
+---
+metadata:
+  title: My Forms
+  short title: My Forms
