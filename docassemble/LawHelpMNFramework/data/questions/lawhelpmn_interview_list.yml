@@ -22,8 +22,7 @@ default screen parts:
         <img src="/packagestatic/docassemble.BrandingMN/LawHelpMN2x_002_resized.png" alt="${ al_logo.alt_text }"/>
       </div>
       <div class="al-title">
-        <div class="title-row-1">${ "My Forms" }</div>
-        <div class="title-row-2">${ "In progress" }</div>
+        <div class="title-row-1">${ "In progress Forms" }</div>
       </div>
     </div> 
   short logo: |
@@ -32,8 +31,7 @@ default screen parts:
         <img src="/packagestatic/docassemble.BrandingMN/LawHelpMN2x_002_resized.png" alt="${ al_logo.alt_text }"/>
       </div>
       <div class="al-title">
-        <div class="title-row-1">${ "My Forms" }</div>
-        <div class="title-row-2">${ "In progress" }</div>
+        <div class="title-row-1">${ "In progress Forms" }</div>
       </div>
     </div>
 
