@@ -53,8 +53,7 @@ setup(name='docassemble.LawHelpMNFramework',
       license='',
       url='https://docassemble.org',
       packages=find_namespace_packages(),
-      install_requires=[],
+      install_requires=['docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main'],
       zip_safe=False,
       package_data=find_package_data(where='docassemble/LawHelpMNFramework/', package='docassemble.LawHelpMNFramework'),
      )
-
