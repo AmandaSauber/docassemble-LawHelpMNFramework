@@ -105,17 +105,34 @@ default screen parts:
 #    nav.hide()
 #  section_in_progress_forms
 ---
+code: |
+  al_sessions_to_exclude_from_interview_list = (
+      get_config("assembly line", {})
+      .get("interview list", {})
+      .get(
+          "exclude from interview list",
+          get_config("assembly line", {}).get(
+              "exclude from interview list",
+              [
+                  "docassemble.ALDashboard",
+                  "docassemble.AssemblyLine:data/questions/al_saved_sessions_store.yml",
+                  "docassemble.AssemblyLine:data/questions/interview_list.yml", "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml", "docassemble.base:data/questions/default-interview.yml" 
+              ],
+          ),
+      )
+  )
+---
 event: section_in_progress_forms
 id: interview list
 question: |
   My Forms 
 subquestion: |
-  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=[al_sessions_to_exclude_from_interview_list, "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml"])) > 0:
+  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=al_sessions_to_exclude_from_interview_list)) > 0:
   Click the name of a form to keep working on it or to download your completed forms.
 
   **Note: Forms are deleted after 90 days of inactivity.** If you want to keep them longer, download your forms or edit and re-save the form to reset the activity timer.
 
-  ${ session_list_html(filename=None, limit=10, offset=session_page*10, exclude_filenames=[al_sessions_to_exclude_from_interview_list, "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml"]) }
+  ${ session_list_html(filename=None, limit=10, offset=session_page*10, exclude_filenames=al_sessions_to_exclude_from_interview_list) }
 
   <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
@@ -123,7 +140,7 @@ subquestion: |
       <li class="page-item"><a class="page-link" href="${ url_action("update_page_event", page_increment=-1) }">Previous</a></li>
   % endif
 
-  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=[al_sessions_to_exclude_from_interview_list, "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml"], limit=10, offset=session_page*10)) >= 10:
+  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=al_sessions_to_exclude_from_interview_list, limit=10, offset=session_page*10)) >= 10:
       <li class="page-item"><a class="page-link" href="${ url_action("update_page_event", page_increment=1) }">Next</a></li>
   % endif
     </ul>
@@ -154,7 +171,7 @@ subquestion: |
 section: section_in_progress_forms
 under: |
   Don't see your saved forms? Try your [LawHelp Interactive](https://lawhelpinteractive.org/) account.[NEWLINE]
-  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=[al_sessions_to_exclude_from_interview_list, "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml"])) > 0:
+  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=al_sessions_to_exclude_from_interview_list)) > 0:
   <div style="float: right;">
   ${ action_button_html(url_action("interview_list_delete_all"), label="Delete All", size="md", color="danger", icon="trash-can", id_tag="al-delete-all-sessions") }
   </div>
@@ -180,7 +197,7 @@ script:
   </script>  
 
 right: |
-  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=[al_sessions_to_exclude_from_interview_list, "docassemble.LawHelpMNFramework:data/questions/lawhelpmn_interview_list.yml"])) > 0:
+  % if len(get_saved_interview_list(filename=None, filename_to_exclude=al_session_store_default_filename, exclude_filenames=al_sessions_to_exclude_from_interview_list)) > 0:
   <div style="float: center;">
   ${ action_button_html(url="https://docs-dev.lawhelpmn.org/list", label="Create a Form", icon="square-plus", color="secondary", size="md") }
   </div>
@@ -329,23 +346,7 @@ code: |
 #---
 #code: |
 #  LOGO_TITLE_ROW_2 = config_with_language_fallback("logo title row 2")
----
-code: |
-  al_sessions_to_exclude_from_interview_list = (
-      get_config("assembly line", {})
-      .get("interview list", {})
-      .get(
-          "exclude from interview list",
-          get_config("assembly line", {}).get(
-              "exclude from interview list",
-              [
-                  "docassemble.ALDashboard",
-                  "docassemble.AssemblyLine:data/questions/al_saved_sessions_store.yml",
-                  "docassemble.AssemblyLine:data/questions/interview_list.yml",
-              ],
-          ),
-      )
-  )
+
 ---
 event: delete_results_action
 code: |

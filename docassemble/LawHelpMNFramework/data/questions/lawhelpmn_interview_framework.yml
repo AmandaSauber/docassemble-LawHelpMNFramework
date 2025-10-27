@@ -5,9 +5,9 @@
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
-  - lawhelpmn_cover_sheet.yml ### NEED TO CREATE THIS FILE - this is a word doc that's included in the Templates section for MI ###
-  - lawhelpmn_terms_of_use.yml ### NEED TO CREATE THIS FILE ###
-  - lawhelpmn_visual_custom_error_action.yml ### FILE CREATED BUT NOT YET INCLUDED IN THE PACKAGE - IN DRAFT FORM!
+#  - lawhelpmn_cover_sheet.yml ### NEED TO CREATE THIS FILE - this is a word doc that's included in the Templates section for MI ###
+#  - lawhelpmn_terms_of_use.yml ### NEED TO CREATE THIS FILE ###
+#  - lawhelpmn_visual_custom_error_action.yml ### FILE CREATED BUT NOT YET INCLUDED IN THE PACKAGE - IN DRAFT FORM!
   - docassemble.MNCourts:MN_Courts.yml
   
 ########### MODULES ###########
