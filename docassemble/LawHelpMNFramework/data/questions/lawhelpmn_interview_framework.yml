@@ -1,36 +1,38 @@
 ############# TAKEN FROM MLH AS A GUIDE - NEEDS UPDATING FOR LAWHELPMN ###############
 ######################################################################################
 
-########### INCLUDE ############
+##################################### INCLUDE ########################################
+### Add this block and items in this list as needed per interview 
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.LawHelpMNFramework:lawhelpmn_basic_questions.yml
 #  - lawhelpmn_cover_sheet.yml ### NEED TO CREATE THIS FILE - this is a word doc that's included in the Templates section for MI ###
 #  - lawhelpmn_terms_of_use.yml ### NEED TO CREATE THIS FILE ###
 #  - lawhelpmn_visual_custom_error_action.yml ### FILE CREATED BUT NOT YET INCLUDED IN THE PACKAGE - IN DRAFT FORM!
-  - docassemble.MNCourts:MN_Courts.yml
+  - docassemble.LawHelpMNFramework:MN_Courts.yml # Do I need this as an 'include'? I add the courts code via an objects block.. does adding it as an include streamline adding it as an object and elsewhere throughout the code in an interview? 
   
-########### MODULES ###########
+#################################### MODULES #########################################
+### Add modules as needed to individual interviews 
 ---
 modules:
   - docassemble.demo.accordion # for review screen accordions
   - docassemble.AssemblyLine.al_courts ## DO I ACTUALLY NEED THIS FOR MY COURT CODE TO WORK??
 
-########## FEATURES ###########
+#################################### FEATURES ########################################
+### Add this block to individual interviews 
 ---
 features:
-  bootstrap theme: docassemble.BrandingMN:data/static/LHBranding_bootstrap.min.css 
-  css:
-    - LawHelpMN2x_002_resized.png
-  small screen navigation: False  # turn off nav panel on small screens
+  bootstrap theme: docassemble.BrandingMN:data/static/LHBranding_bootstrap.min.css # not sure I need this in the features block of each interview since I'm including the branding package? 
   progress bar: True
   show progress bar percentage: True
   progress bar method: default
 
-########## OBJECTS ############
+#################################### OBJECTS #########################################
+### Add objects as needed to individual interviews. 
 ---
 objects:
-  - al_logo: DAStaticFile.using(filename="LawHelpMN2x_002_resized.png")  ## Do i need this in Objects? I don't currently have an al_logo object.. ##
+  - al_logo: DAStaticFile.using(filename="MNfavicon-96x96.png", alt_text="LawHelpMN") # add to all interviews 
   - the_courts: ALCourtLoader.using(file_name='Courts.xlsx')
   - alias_name: |
       DAList.using(object_type=Individual,there_are_any=True)
@@ -40,39 +42,43 @@ objects:
   - attorneys: ALPeopleList.using(there_is_another=False)
   - server: ALIndividual
 ---
-# This block defines Assembly Line-level variables and LawHelpMN Organization-level variables that will most likely be consistent throughout the portfolio.
+################################ ORG LEVEL VARIABLES #################################
+# These blocks define Assembly Line-level variables that will most likely be consistent throughout the portfolio. Add to individual interviews as needed.
 code: |
-  AL_DEFAULT_COUNTRY = "US"   # default country and list of states in address fields
+  AL_DEFAULT_COUNTRY = "US" # default country and list of states in address fields
+---
+code: |
   AL_DEFAULT_STATE = "MN"     # default state in address fields
-  AL_ORGANIZATION_HOMEPAGE = get_config('app homepage', 'https://www.lawhelpmn.org/forms')
-  AL_ORGANIZATION_TITLE = "Court Forms Online"
-  AL_DEFAULT_OVERFLOW_MESSAGE = " [CONTINUED ON ATTACHMENT.]"  
-
-  ##### The below variables can be used to quickly and consistently include common links and language. ######
+---
+code: |
+  AL_ORGANIZATION_HOMEPAGE = get_config('app homepage', 'https://www.lawhelpmn.org/forms')    # Used to set the exit url that you will be taken to if you click the title in the navigation bar.
+---
+code: |
+  AL_ORGANIZATION_TITLE = "LawHelpMN"   # Used to set the organization title (which appears above the interview title) in the navigation bar. 
   
-  LAWHELPMN_GUIDE = "[Your Legal Guide](https://www.lawhelpmn.org/#main-container)"
-  LAWHELPMN_PROVIDERS_AND_CLINICS = "[You can use the Providers & Clinics tool to search for a lawyer or legal services in your area.](https://www.lawhelpmn.org/providers-and-clinics)"
-
-  ##### This will get the docassemble-level metadata short title #####
+#  Add this to the interview code when the header still shows "Minnesota Court Forms Online". This should be overriding in the config file to be "LawHelpMN", but it appears that this is not always the case. This can be overridden in the individual interview files by applying this code block. 
+---
+code: |
+  AL_DEFAULT_OVERFLOW_MESSAGE = " [CONTINUED ON ATTACHMENT.]"  # Used to control the text displayed in an input box when text is too long to fit on a PDF. The default is ... if not specified.
   
-  interview_short_title = all_variables(special='metadata').get('short title')
-  interview_title = all_variables(special='metadata').get('title')
 ---
-# These blocks contains LawHelpMN Organization-level variables that will vary from interview to interview.
-# These are the organization defaults.
-# Copy each block to an individual interview yml file and override as needed. 
+###### The below LawHelpMN Organization-level variables that will vary from interview to interview. Add these blocks as needed to individual interviews ######   
+
+# Add this block to all interviews. See note below for customizing this code.
 code: |
-  github_repo_name = "docassemble-XXXX"  ## Replace XXXX with the name of your package (i.e. 'docassemble-AnswerToComplaintAos')
+  github_repo_name = "docassemble-XXXX"   
+## Replace XXXX with the name of your package (i.e. 'docassemble-AnswerToComplaintAos')
+
 ---
-### MIGHT NOT NEED ALL OF THESE ###
+                        ### Add as needed per interview  ###
 code: |
-  LawHelpMN_instructions_included = True  # are instructions generated with the form(s)/letter(s)?
----
-code: |
-  LawHelpMN_multiple_forms = True         # does the interview produce multiple forms?
+  LawHelpMN_instructions_included = True  # Asks if there are instructions generated with the form(s)/letter(s)
 ---
 code: |
-  LawHelpMN_court_forms = True             # Does this create forms to be filed with the court?
+  LawHelpMN_multiple_forms = True         # Asks if the interview produces multiple forms
+---
+code: |
+  LawHelpMN_court_forms = True             # Asks if the interview creates forms that need to be filed with the court
 ---
 code: |
   LawHelpMN_form_type = "form(s)"          # form / forms / letter (for use in intro/outro pages)
@@ -82,9 +88,26 @@ code: |
   LawHelpMN_time_max = 45
 ---
 code: |
-  LawHelpMN_materials_included = False      # include a list of needed info to complete the interview?
+  LawHelpMN_materials_included = False      # Asks if a list of items/info needs to be gathered in order to complete the interview
 ---
-template: LawHelpMN_materials              # default list of needed info. Keep as bulleted list if replacing
+###### The following variables can be used to quickly and consistently include common links and language. ###### SHOULD THESE BE CODE BLOCKS??
+code: |  
+  LAWHELPMN_GUIDE = "[Your Legal Guide](https://www.lawhelpmn.org/#main-container)"
+---
+code: |
+  LAWHELPMN_PROVIDERS_AND_CLINICS = "[You can use the Providers & Clinics tool to search for a lawyer or legal services in your area.](https://www.lawhelpmn.org/providers-and-clinics)"
+---
+############ This will get the docassemble-level metadata short title ################
+
+metadata:  
+  interview_short_title = all_variables(special='metadata').get('short title')
+  interview_title = all_variables(special='metadata').get('title')
+  
+---
+#################################### TEMPLATES #######################################
+
+# Relates to the code block: 'LawHelpMN_materials_included = False' above
+template: LawHelpMN_materials              # default list of info./items needed to complete the interview. Keep as bulleted list if replacing in individual interviews.
 content: |
   To complete this interview, you will need:
 
@@ -94,7 +117,15 @@ content: |
   * Information about your court case    # Apply this when there is an existing court case
   * Any relevant documents or photos you might need to provide 
 
-########## REVIEW AND EDIT ANSWERS #############
+### Templates can also be used to provide instructional information when there's a lot of text to include. Templates will appear as an expandable section, highlighted in green text. Here's the structure to use:
+
+# template: [template_variable_name]
+# subject: |
+#    Text of your title that will appear on the exandable bar
+# content: |
+#    The body of your content (i.e. instructions).
+
+############################# REVIEW AND EDIT ANSWERS ################################
 ---
 mandatory: true
 code: |
@@ -102,23 +133,9 @@ code: |
   review_accordion_explainer = "Click on the section titles to expand the section and edit answers."  ## Incorporate this when using accordions on review screens ## 
   
 ---
-### CREATE A STANDARD WELCOME MESSAGE ### 
+############################## SIGN IN / SIGN UP ACTIONS #############################
 
-# default welcome info; keep relatively short. If lots of preconditions/warnings, make separate screen
-template: LawHelpMN_welcome_message     
-content: |
-  Welcome to the ${ LawHelpMN_interview_short_title } interview.
-
-  This interview will help you prepare your ${ LawHelpMN_form_type } and give you next steps.  
-
-  This interview does not give legal advice. Using this program does not mean you have an attorney-client relationship.
-
-  You alone are responsible for the outcome of your case. If you need legal advice, you should contact a lawyer. Find [your local legal aid provider](https://www.lsc.gov/what-legal-aid/find-legal-aid).
-  
----
-############ SIGN IN / SIGN UP ACTIONS #############
-
-# Override what's in al_visual.yml 
+# Overrides what's in al_visual.yml 
 default screen parts:  
   exit link: exit                    # sets behavior of Exit buttons
   exit url: https://www.lawhelpmn.org/
@@ -160,15 +177,33 @@ code: |
   LawHelpMN_back_button_label = "Undo"
 
   set_parts(continue_button_label = LawHelpMN_continue_button_label, back_button_label = LawHelpMN_back_button_label) 
-
   
-# # # # # # # # # # # # # # # # Standard Intro Pages # # # # # # # # # # # # # 
+---
+############################### WELCOME MESSAGE ######################################
+
+# Replace 'basic questions intro screen' (from ql_baseline.yml) with this code.
+
+# default welcome info. to be included before any specific intro details about the individual interview. 
+template: LawHelpMN_welcome_message     
+content: |
+  Welcome to the ${ LawHelpMN_interview_short_title } interview.
+
+  This interview will help you prepare your ${ LawHelpMN_form_type } and give you next steps.  
+
+  This interview does not give legal advice. Using this program does not mean you have an attorney-client relationship.
+
+  You alone are responsible for the outcome of your case. If you need legal advice, you should contact a lawyer. Find [your local legal aid provider](https://www.lsc.gov/what-legal-aid/find-legal-aid).
+
+# Interview specific intro would go here, following the welcome message
+
+---  
+# # # # # # # # # # # # # # # # Standard Intro Pages # # # # # # # # # # # # # # # # #
 ---
 # LawHelpMN standard intro pages
 # Simply make a reference to the LawHelpMN_standard_intro_pages variable in an interview's main Interview Order block in order to bring in these standard intro pages. 
 code: |
-  LawHelpMN_intro_landing
   LawHelpMN_agree_terms
+  LawHelpMN_intro_landing
   LawHelpMN_intro_navigate_save
   LawHelpMN_standard_intro_pages = True
 
@@ -178,7 +213,27 @@ code: |
 # Any of these pages can be overridden in an interview's custom yml file by creating a question block that uses the respective continue button field for its own continue button field.
 
 ---
-# This can be used as the very first screen for an interview.
+################### THIS WILL BE MOVING TO A SEPARATE YML FILE ######################
+id: terms of use       
+question: |
+  Terms of Use and Privacy Policy
+fields:
+  - note: |          
+      Please review the Terms of Use and Privacy Policy:
+      ${ display_template(LawHelpMN_terms_of_use, scrollable=True) } 
+  - I agree to the Terms of Use and Privacy Policy: i_understand
+    datatype: checkboxes
+    none of the above: False    
+    minlength: 1
+    choices:
+      - I understand and wish to continue
+    validation messages:
+      minlength: |
+        You must accept the Terms of Use and Privacy Policy to continue.  
+continue button field: LawHelpMN_agree_terms   
+
+---
+# This can be used as the very first screen for an interview, following the welcome message and terms of use.
 id: LawHelpMN intro landing FirstScreen
 question: |
   ${ LawHelpMN_interview_short_title }
@@ -199,26 +254,6 @@ subquestion: |
   % endif
 continue button field: LawHelpMN_intro_landing
 
----
-# for now this is separate, but could incorporate in another intro page
-id: terms of use       
-question: |
-  Terms of Use and Privacy Policy
-fields:
-  - note: |          
-      Please review the Terms of Use and Privacy Policy:
-      ${ display_template(LawHelpMN_terms_of_use, scrollable=True) } 
-  - I agree to the Terms of Use and Privacy Policy: i_understand
-    datatype: checkboxes
-    none of the above: False    
-    minlength: 1
-    choices:
-      - I understand and wish to continue
-    validation messages:
-      minlength: |
-        You must accept the Terms of Use and Privacy Policy to continue.  
-continue button field: LawHelpMN_agree_terms   
-
 --- 
 if: user_logged_in()
 id: LawHelpMN intro saving answers logged in
@@ -233,11 +268,11 @@ subquestion: |
   
   Go to the menu at the top of the screen and select “My Forms” to go back to a saved form.
   
-  <h2 class="h5">Help Text</h2>
-  Click {green underlined words} for a definition or more information.   
-terms:
-  green underlined words: |
-    More information appears when you click the green underlined words.
+#  <h2 class="h5">Help Text</h2>
+#  Click {green underlined words} for a definition or more information.   
+#terms:
+#  green underlined words: |
+#    More information appears when you click the green underlined words.
 continue button field: LawHelpMN_intro_navigate_save
 ---
 if: not user_logged_in()
@@ -257,11 +292,11 @@ subquestion: |
   
   To go back to a saved form, log in. Then go to the menu at the top of the screen and select “My Forms.”
   
-  <h2 class="h5">Help Text</h2>
-  click {green underlined words} for a definition or more information. 
-terms:
-  green underlined words: |
-    More information appears when you click the green underlined words.
+#  <h2 class="h5">Help Text</h2>
+#  click {green underlined words} for a definition or more information. 
+#terms:
+#  green underlined words: |
+#    More information appears when you click the green underlined words.
 continue button field: LawHelpMN_intro_navigate_save
 
 # # # # # # # # # # # # # # # # Standard Outro Pages # # # # # # # # # # # # # 
@@ -327,7 +362,7 @@ subquestion: |
 continue button field: LawHelpMN_outro_saving_answers
 progress: 99
 
-########### FINAL (DOWNLOAD) SCREEN ##############
+############################ FINAL (DOWNLOAD) SCREEN #################################
 ---
 ## NOT SURE I NEED A CUSTOM SCREEN HERE?? NEED TO PONDER ON THIS ONE.. 
 id: DownloadScreen
@@ -358,72 +393,7 @@ subquestion: |
 progress: 99
 
 ---
-# # # # # # # # # # # # # # Court Loader - Begin # # # # # # # # # # # # # #
-code: |
-  trial_court_district
-  display_court
----
-code: |
-  if the_courts.county_has_one_court(the_county):
-    my_court = the_courts.county_court("my_court", the_county)
-  else:
-    court_index
-    my_court = the_courts.as_court("my_court", court_index)
----
-code: |
-  def get_judicial_district(the_county):
-      if the_county in ["McLeod", "Sibley", "Carver", "Scott", "Dakota", "Le Sueur", "Goodhue"]:
-          return "First Judicial District"
-      elif the_county == "Ramsey":
-          return "Second Judicial District"
-      elif the_county in ["Rice", "Waseca", "Steele", "Dodge", "Olmsted", "Wabasha", "Winona", "Freeborn", "Mower", "Fillmore", "Houston"]:
-          return "Third Judicial District"
-      elif the_county == "Hennepin":
-          return "Fourth Judicial District"
-      elif the_county in ["Lincoln", "Lyon", "Redwood", "Brown", "Nicollet", "Pipestone", "Murray", "Cottonwood", "Watonwan", "Blue Earth", "Rock", "Nobles", "Jackson", "Martin", "Faribault"]:
-          return "Fifth Judicial District"
-      elif the_county in ["St. Louis", "Lake", "Cook", "Carlton"]:
-          return "Sixth Judicial District"
-      elif the_county in ["Clay", "Becker", "Otter Tail", "Wadena", "Douglas", "Todd", "Morrison", "Mille Lacs", "Stearns", "Benton"]:
-          return "Seventh Judicial District"
-      elif the_county in ["Wilkin", "Grant", "Traverse", "Big Stone", "Stevens", "Pope", "Swift", "Lac qui Parle", "Kandiyohi", "Chippewa", "Meeker", "Yellow Medicine", "Renville"]:
-          return "Eighth Judicial District"
-      elif the_county in ["Kittson", "Roseau", "Lake of the Woods", "Marshall", "Beltrami", "Koochiching", "Pennington", "Red Lake", "Polk", "Clearwater", "Norman", "Mahnomen", "Hubbard", "Cass", "Itasca", "Crow Wing", "Aitkin"]:
-          return "Ninth Judicial District"
-      elif the_county in ["Pine", "Kanabec", "Sherburne", "Isanti", "Chisago", "Anoka", "Wright", "Washington"]:
-          return "Tenth Judicial District"
-      else:
-          return "Unknown Judicial District"
-
-  trial_court_district = get_judicial_district(the_county)
----
-id: district and county
-question: |
-  What county are you being sued in?
-fields:
-  - "no label": the_county
-    code: sorted(the_courts.county_list())
-    required: True
-    label above field: True
-    datatype: str
-  - note: |
-      You can find the name of the county in the top left-hand corner of the Complaint.
----
-question: |
-  There is more than one court in your county. Pick the court below.
-fields:
-  - "no label": court_index
-    code: the_courts.matching_courts_in_county(the_county)
----
-continue button field: display_court
-question: |
-  You selected "${ my_court }"
-subquestion: |
-  ${ my_court.address.block() }
----
-# # # # # # # # # # # # # # # Court Loader - End # # # # # # # # # # # # # # #
----
-# # # # # # # # # # # Snapshot Code # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # Snapshot Code # # # # # # # # # # # # # # # # # # # 
 code: |
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -443,8 +413,9 @@ code: |
   stuff_to_snapshot['end_time'] = str(current_datetime().format_datetime(format='yyyy-MM-dd h:mm a'))
   reconsider('snapshot_interview_state')
   snapshot_download = True
+  
 ---
-# # # # Interview Down / Maintenance Message # # # #
+# # # # # # # # # # # # # Interview Down / Maintenance Message # # # # # # # # # # # #
 
 # Put this code at top of an interview if the interview needs to be taken down for a little while.
 # ---
@@ -600,299 +571,3 @@ content: |
 #  % else:
 #  **Version Information:** "${all_variables(special='metadata').get('title','').rstrip()}" version `${ package_version_number }`. This tool also uses code from the Document Assembly Line Project, version `${ al_version }`.
 #  % endif
-
-
-###### User/Other Parties Address and Phone #######
----
-code: |
-  users[i].name.first
-  users[i].name.last
-  users[i].name.middle
-  users[i].name.suffix
-  users[i].address.address
-  users[i].phone_number
-  users[i].email
-  users[i].complete = True
----
-continue button field: users_name
-id: User name
-question: |
-  What is your name?
-fields:
-  - code: |
-      users[0].name_fields()
-section: Name
----
-continue button field: users_address
-id: users address
-question: |
-  What is your address?
-fields:
-  - code: |
-      users[0].address_fields(country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE)
-section: Address
----
-continue button field: users_phone
-id: user phone number
-question: |
-  What is your phone number?
-fields:  
-  - Phone number: users[0].phone_number
-
-validation code: |
-  import re
-  
-  digits = re.sub(r'\D', '', users[0].phone_number)
-
-  if len(digits) != 10:
-    validation_error("Please enter a phone number in the format (xxx) xxx-xxxx", field="phone_number")
-
-  users[0].phone_number = f"({digits[0:3]}) {digits[3:6]}-{digits[6:10]}"
-
-#validation code: |
-#  if not phone_number_is_valid(users[0].phone_number):
-#    validation_error("Please enter a phone number in the format (xxx) xxx-xxxx", field="phone_number")
-#  phone_number = phone_number_formatted(users[0].phone_number)
-section: Phone Number
----
-continue button field: users_email
-id: user email address
-question: |
-  What is your email address?
-fields:
-  - Email address: users[0].email
-    required: False
-section: Email Address
----
-sets:
-  - other_parties[i].name.first
-  - other_parties[i].name.last
-  - other_parties[i].name.middle
-  - other_parties[i].name.suffix
-id: names of opposing parties
-question: |
-  % if user_started_case:
-  Name of the person or company that owes you money
-  % else:
-  Name of ${ ordinal(i) } **plaintiff** or petitioner in this matter
-  % endif
-fields:
-  - code: |
-      other_parties[i].name_fields(person_or_business='unsure')
-section: Opposing Party Name
----
-sets:
-  - x.address.address
-  - x.address.city
-  - x.address.zip
-  - x.address.unit
-  - x.address.state
-  - x.address.country
-id: persons address
-generic object: ALIndividual
-question: |
-  What is ${ x.possessive('address') }?
-fields:
-  - code: |
-      x.address_fields(country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE)
-section: Opposing Party Address
----
-####################### MI CODE FOR ADDRESS AND PHONE ######################
-sets:
-  - x.address.address
-  - x.address.city
-  - x.address.zip
-  - x.address.unit
-  - x.address.state
-#  - x.address.country
-id: persons address
-generic object: ALIndividual
-question: |
-  What is ${ x.possessive('address') }?
-fields:
-  - code: |
-      x.address_fields(country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE, show_country=False)
----
-id: your address
-sets:
-  - users[0].address.address
-  - users[0].address.city
-  - users[0].address.zip
-  - users[0].address.unit
-  - users[0].address.state
-#  - users[0].address.country
-question: |
-  What is your address?
-subquestion: |
-  Use an address where you can be contacted.
-fields:
-  - code: |
-      users[0].address_fields(country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE, show_country=False)
----
-id: user i's address
-sets:
-   - users[i].address.address
-   - users[i].address.city
-   - users[i].address.zip
-   - users[i].address.unit
-   - users[i].address.state
-#   - users[i].address.country
-question: |
-  What is ${ users[i] }'s address?
-fields:
-  - Same as your address: users[i].address
-    datatype: object_radio
-    choices:
-      - users[0].address if defined("users[0].address.address") else None
-    object labeler: |
-      lambda y: y.on_one_line()
-    none of the above: |
-      Somewhere else
-    disable others: True
-    show if:
-      code: |
-        defined("users[0].address.address")
-  - code: |
-      users[i].address.address_fields(country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE, show_country=False)
----
-generic object: ALAddress
-template: x.address_label
-content: |
-  Street Address or PO Box
----
-generic object: ALAddress
-template: x.unit_label
-content: |
-  Apartment, suite, etc
----
-generic object: ALAddress
-template: x.state_or_province_label
-content: |
-  State or Province
----
-generic object: ALAddress
-template: x.postal_code_label
-content: |
-  Zip or Postal Code
----
-id: persons contact information
-generic object: ALIndividual
-question: |
-  What is ${x}'s phone number?
-fields:
-  - Phone: x.phone_number
-    show if:
-      variable: x.no_phone_number
-      is: False
-  - ${ x } does not have a phone or I don't know their number.: x.no_phone_number
-    required: False
-    datatype: yesno
----
-id: your contact information
-question: |
-  What is your phone number?
-subquestion: |
-  Court staff may need to call you about your case. It's important to give a phone number if possible.
-
-  ${ collapse_template(what_if_no_number_template) }
-fields:
-  - Phone number: users[0].phone_number
-    show if:
-      variable: users[0].no_phone_number
-      is: False
-  - There's NO reliable way to contact me by phone.: users[0].no_phone_number
-    required: False
-    datatype: yesno
-  - note: |
-      ${ if_check_no_phone_template.content }
-    show if: users[0].no_phone_number
----
-template: what_if_no_number_template
-subject: What if I don't have a phone?
-content: |
-  You can enter someone else's number as long as they can safely pass on messages to you. Tell this person that you are using their number on your court forms. 
-
-  If you don't have a phone **and** nobody can safely pass messages to you, check the checkbox below.
----
-template: if_check_no_phone_template
-subject: What if I don't have a phone?
-content: |
-  If someone can safely pass messages on to you, **uncheck** the statement above and enter their phone number. Tell this person that you are using their number on your court forms. 
----
-generic object: ALIndividual
-code: |
-  if x.no_phone_number:
-    x.phone_number = "Unknown phone"
----
-code: |
-  if users[0].no_phone_number:
-    users[0].phone_number = "Does not have phone"
-######### END MI ADDRESS / PHONE CODE #################
-
----
-###### DOCKET (I.E. FILE NUMBER) NUMBER #######
-continue button field: file_number    # May not need to use the Continue button in all interviews 
-id: docket number
-question: |
-  What is the Court File Number used to track this case in court?
-fields:
-  - I don't know the case number: dont_know_docket_number
-    datatype: yesno    
-  - Court File Number: docket_number
-    hide if: dont_know_docket_number
-    help: |
-      You can find this in the upper right-hand corner of the Complaint.
-      
-################### USER ATTORNEY #######################
----
-# Not currently using user-has-attorney but keep as reference for incorporation with future interviews
-#sets:
-#  - users[i].has_attorney
-#id: user has attorney
-#question: |
-#  Do you have a lawyer?
-#subquestion: |
-#fields:
-#  - no label: users[i].has_attorney
-#    input type: radio
-#    choices:
-#      - Yes: True
-#      - No: False
----
-######### OTHER PARTY ATTORNEY ##########
-id: attorneys
-generic object: ALPeopleList
-question: |
-  Does ${ other_parties } have any attorneys?
-fields:
-  - no label: attorneys.there_are_any
-    datatype: yesnoradio
----
-id: attorney fax number
-generic object: ALIndividual
-question: |
-  What is ${noun_plural(attorneys)}'s fax number?
-fields:
-  - no label: x.fax_number
-validation code: |
-      if not phone_number_is_valid(x.fax_number):
-        validation_error("Please enter a fax number in the format (xxx) xxx-xxxx", field="x.fax_number")
-      x.fax_number = phone_number_formatted(x.fax_number)
-
-######## USER ROLE ##########
----
-template: help_user_ask_role_template    # must edit/replace this if other roles apply
-subject: |
-  How do I know?
-content: |
-  You can find the parties by looking at the first page of an existing court document, like a complaint, petition, or answer. The top of the first page is the “caption” which has the basic case information. This area will list all of the parties in the case with their titles.
-
-  If you were the first person to file a form to start this case, you are the Plaintiff. If someone else started this case by filing in court, you are the Defendant.
-
-############ CONFIDENTIAL ADDRESS #############
----
-template: confidential_address_family
-subject: |
-  What if it's not safe for the other side in my case (or someone else) to see my contact information?
-content: |
-  You can **use an alternate address** on your court forms if you worry for your safety. For example, you can use the address of a friend or family member if they have agreed to let you do this and you are able to get your mail from them. This is important so you can receive copies of everything filed in your case and notices from the court.

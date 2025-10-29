@@ -1,9 +1,9 @@
 # Overrides AL interview_list.yml. Displays session data for logged in users (i.e. in My Interviews).
 
 ################### Full interview_list AL CODE #################
----
-include:
-  - docassemble.AssemblyLine:data/questions/interview_list.yml
+#---
+#include:
+#  - docassemble.AssemblyLine:data/questions/interview_list.yml
 #  - docassemble.ALToolbox:display_template.yml
 ---
 metadata:
