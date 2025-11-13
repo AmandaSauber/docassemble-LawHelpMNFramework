@@ -352,3 +352,4 @@ event: delete_results_action
 code: |
   undefine("limit_filename")
 #  undefine("search_keyword")
+---

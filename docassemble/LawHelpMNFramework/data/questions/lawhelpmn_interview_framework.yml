@@ -8,7 +8,7 @@ include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.LawHelpMNFramework:lawhelpmn_basic_questions.yml
 #  - lawhelpmn_cover_sheet.yml ### NEED TO CREATE THIS FILE - this is a word doc that's included in the Templates section for MI ###
-#  - lawhelpmn_terms_of_use.yml ### NEED TO CREATE THIS FILE ###
+  - docassemble.LawHelpMNFramework:lawhelpmn_terms_of_use.yml 
 #  - lawhelpmn_visual_custom_error_action.yml ### FILE CREATED BUT NOT YET INCLUDED IN THE PACKAGE - IN DRAFT FORM!
   - docassemble.LawHelpMNFramework:MN_Courts.yml # Do I need this as an 'include'? I add the courts code via an objects block.. does adding it as an include streamline adding it as an object and elsewhere throughout the code in an interview? 
   
@@ -220,7 +220,7 @@ question: |
 fields:
   - note: |          
       Please review the Terms of Use and Privacy Policy:
-      ${ display_template(LawHelpMN_terms_of_use, scrollable=True) } 
+      ${ display_template(LawHelpMN_Terms_of_Use, scrollable=True) } 
   - I agree to the Terms of Use and Privacy Policy: i_understand
     datatype: checkboxes
     none of the above: False    
